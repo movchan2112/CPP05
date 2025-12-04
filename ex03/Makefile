@@ -3,7 +3,7 @@ CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iinc
 
 # Target executable
-TARGET = ex02
+TARGET = ex03
 
 # Source directory
 SRC_DIR = src
@@ -15,10 +15,14 @@ INC_DIR = inc
 OBJ_DIR = obj
 
 # Source files
-SOURCES = main.cpp $(SRC_DIR)/Bureaucrat.cpp $(SRC_DIR)/AForm.cpp $(SRC_DIR)/PresidentialPardonForm.cpp $(SRC_DIR)/ShrubberyCreationForm.cpp $(SRC_DIR)/RobotomyRequestForm.cpp
+SOURCES =	main.cpp $(SRC_DIR)/Bureaucrat.cpp $(SRC_DIR)/AForm.cpp \
+			$(SRC_DIR)/PresidentialPardonForm.cpp $(SRC_DIR)/ShrubberyCreationForm.cpp \
+			$(SRC_DIR)/RobotomyRequestForm.cpp $(SRC_DIR)/Intern.cpp
 
 # Object files
-OBJECTS = $(OBJ_DIR)/main.o $(OBJ_DIR)/Bureaucrat.o $(OBJ_DIR)/AForm.o $(OBJ_DIR)/PresidentialPardonForm.o $(OBJ_DIR)/ShrubberyCreationForm.o $(OBJ_DIR)/RobotomyRequestForm.o
+OBJECTS = 	$(OBJ_DIR)/main.o $(OBJ_DIR)/Bureaucrat.o $(OBJ_DIR)/AForm.o \
+			$(OBJ_DIR)/PresidentialPardonForm.o $(OBJ_DIR)/ShrubberyCreationForm.o \
+			$(OBJ_DIR)/RobotomyRequestForm.o $(OBJ_DIR)/Intern.o
 
 # Default target
 all: $(OBJ_DIR) $(TARGET)

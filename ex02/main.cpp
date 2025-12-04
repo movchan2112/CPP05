@@ -1,75 +1,120 @@
+#include <iostream>
+#include <cstdlib> // Для rand, srand
+#include <ctime>   // Для time
+
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
+
+// Цвета для красивого вывода
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define BLUE    "\033[34m"
+#define YELLOW  "\033[33m"
 
 int main() {
-    // --- ТЕСТ 1: Успешное создание и подписание ---
-    std::cout << "\033[34m" << "--- TEST 1: Success Scenario ---" << "\033[0m" << std::endl;
+    // 1. Инициализация генератора случайных чисел (для Robotomy)
+    std::srand(std::time(NULL));
+
+    std::cout << BLUE << "--- STARTING TESTS ---" << RESET << std::endl;
+
+    // Создаем бюрократов разных уровней
+    Bureaucrat boss("Big Boss", 1);        // Может всё
+    Bureaucrat mid("Manager", 40);         // Может роботомию и кусты
+    Bureaucrat junior("Intern", 140);      // Может подписать кусты, но не выполнить (140 > 137)
+    Bureaucrat newbie("Newbie", 150);      // Ничего не может
+
+    std::cout << "\n" << BLUE << "--- TEST 1: ShrubberyCreationForm (Home) ---" << RESET << std::endl;
     try {
-        // Создаем сильного бюрократа (ранг 5)
-        Bureaucrat boss("Big Boss", 5);
+        ShrubberyCreationForm shrub("Home");
         
-        // Создаем форму (требует 10 для подписи, 20 для выполнения)
-        // 5 < 10, значит Boss может подписать
-        Form contract("Important Contract", 10, 20);
+        // Попытка выполнить без подписи
+        std::cout << YELLOW << "[Test] Executing unsigned form:" << RESET << std::endl;
+        mid.executeForm(shrub); // Должна быть ошибка "Form not signed"
 
-        std::cout << "Before signing:" << std::endl;
-        std::cout << boss << std::endl;
-        std::cout << contract << std::endl;
-
-        // Попытка подписать
-        contract.BeSigned(boss);
+        // Подписываем
+        std::cout << YELLOW << "[Test] Signing form:" << RESET << std::endl;
+        shrub.BeSigned(mid); // или mid.signForm(shrub);
         
-        std::cout << "After signing:" << std::endl;
-        std::cout << contract << std::endl; // Должно быть Signed: Yes
+        // Выполняем
+        std::cout << YELLOW << "[Test] Executing signed form:" << RESET << std::endl;
+        mid.executeForm(shrub); // Успех! Должен создаться файл Home_shrubbery
+        
+        // Попытка выполнить слишком слабым бюрократом
+        std::cout << YELLOW << "[Test] Newbie tries to execute:" << RESET << std::endl;
+        newbie.executeForm(shrub); // Ошибка: Grade too low
+        
+        // Проверка junior - может подписать, но не выполнить
+        std::cout << YELLOW << "[Test] Junior signs form (140 <= 145):" << RESET << std::endl;
+        ShrubberyCreationForm shrub2("Garden");
+        try {
+            junior.signForm(shrub2); // Должно сработать (140 <= 145)
+            std::cout << GREEN << "Success: Junior signed the form" << RESET << std::endl;
+        } catch (std::exception &e) {
+            std::cout << RED << "Failed: " << e.what() << RESET << std::endl;
+        }
+        std::cout << YELLOW << "[Test] Junior tries to execute (140 > 137, should fail):" << RESET << std::endl;
+        junior.executeForm(shrub2); // Ошибка: Grade too low (140 > 137)
     }
     catch (std::exception &e) {
-        std::cerr << "Unexpected error: " << e.what() << std::endl;
+        std::cout << RED << "Exception: " << e.what() << RESET << std::endl;
     }
 
-    std::cout << std::endl;
-
-    // --- ТЕСТ 2: Недостаточный ранг для подписи ---
-    std::cout << "\033[34m" << "--- TEST 2: Grade Too Low To Sign ---" << "\033[0m" << std::endl;
+    std::cout << "\n" << BLUE << "--- TEST 2: RobotomyRequestForm (Bender) ---" << RESET << std::endl;
     try {
-        // Стажер с низким рангом (150)
-        Bureaucrat intern("Intern", 150);
+        RobotomyRequestForm robot("Bender");
         
-        // Конституция требует ранга 1
-        Form constitution("Constitution", 1, 1);
-
-        std::cout << intern << std::endl;
-        std::cout << constitution << std::endl;
-
-        std::cout << "Intern tries to sign Constitution..." << std::endl;
+        // Подписываем через mid (должен смочь, так как 40 <= 72)
+        std::cout << YELLOW << "[Test] Manager signs Robotomy:" << RESET << std::endl;
+        robot.BeSigned(mid); // mid(40) может подписать (40 <= 72)
         
-        // Это должно вызвать исключение Form::GradeTooLowException
-        constitution.BeSigned(intern);
+        // Выполняем через mid (должен смочь, так как 40 <= 45)
+        std::cout << YELLOW << "[Test] Manager executes Robotomy:" << RESET << std::endl;
+        mid.executeForm(robot);
+        
+        // Также тестируем через boss
+        std::cout << YELLOW << "[Test] Boss signs new Robotomy:" << RESET << std::endl;
+        RobotomyRequestForm robot2("Bender");
+        robot2.BeSigned(boss);
 
-        std::cout << "ERROR: This line should not print!" << std::endl;
+        // Запускаем несколько раз, чтобы проверить 50% шанс
+        std::cout << YELLOW << "[Test] Running Robotomy 4 times (expect mixed results):" << RESET << std::endl;
+        boss.executeForm(robot2);
+        boss.executeForm(robot2);
+        boss.executeForm(robot2);
+        boss.executeForm(robot2);
     }
     catch (std::exception &e) {
-        std::cout << "\033[32m" << "Caught expected error: " << e.what() << "\033[0m" << std::endl;
+        std::cout << RED << "Exception: " << e.what() << RESET << std::endl;
     }
 
-    std::cout << std::endl;
-
-    // --- ТЕСТ 3: Ошибка при создании формы ---
-    std::cout << "\033[34m" << "--- TEST 3: Invalid Form Creation ---" << "\033[0m" << std::endl;
+    std::cout << "\n" << BLUE << "--- TEST 3: PresidentialPardonForm (Arthur Dent) ---" << RESET << std::endl;
     try {
-        std::cout << "Trying to create form with grade 0..." << std::endl;
-        Form impossible("Impossible", 0, 50);
+        PresidentialPardonForm pardon("Arthur Dent");
+
+        std::cout << YELLOW << "[Test] Manager tries to sign (Grade 40, need <= 25):" << RESET << std::endl;
+        // mid (grade 40) пытается подписать Pardon (нужен grade <= 25) -> Ошибка
+        try {
+            pardon.BeSigned(mid);
+        } catch (std::exception &e) {
+            std::cout << GREEN << "Success catch: " << e.what() << RESET << std::endl;
+        }
+
+        std::cout << YELLOW << "[Test] Boss signs and executes:" << RESET << std::endl;
+        pardon.BeSigned(boss);
+        boss.executeForm(pardon); // Zaphod Beeblebrox прощает Артура
     }
     catch (std::exception &e) {
-        std::cout << "\033[32m" << "Caught expected error: " << e.what() << "\033[0m" << std::endl;
+        std::cout << RED << "Critical Exception: " << e.what() << RESET << std::endl;
     }
 
-    try {
-        std::cout << "Trying to create form with grade 200..." << std::endl;
-        Form impossible("Impossible", 150, 200);
-    }
-    catch (std::exception &e) {
-        std::cout << "\033[32m" << "Caught expected error: " << e.what() << "\033[0m" << std::endl;
-    }
+    // Очистка памяти не нужна, так как объекты на стеке, 
+    // но если использовал new, не забудь delete.
 
+    std::cout << "\n" << BLUE << "--- END OF TESTS ---" << RESET << std::endl;
+    
     return 0;
 }

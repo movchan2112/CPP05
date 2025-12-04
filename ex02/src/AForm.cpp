@@ -53,6 +53,7 @@ void AForm::BeSigned(Bureaucrat &B) {
     if (B.getGrade() > _reqGradeToSighn) {
         throw AForm::GradeTooLowException();
     }
+    std::cout << "Form has been signed by " << B.getName() << std::endl;
     _signed = true;
 }
 
