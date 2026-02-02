@@ -1,6 +1,6 @@
 #include <iostream>
-#include <cstdlib> // Для rand, srand
-#include <ctime>   // Для time
+#include <cstdlib> 
+#include <ctime>
 
 #include "Bureaucrat.hpp"
 #include "AForm.hpp"
@@ -8,7 +8,6 @@
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
 
-// Цвета для красивого вывода
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
 #define GREEN   "\033[32m"
@@ -16,16 +15,14 @@
 #define YELLOW  "\033[33m"
 
 int main() {
-    // 1. Инициализация генератора случайных чисел (для Robotomy)
     std::srand(std::time(NULL));
 
     std::cout << BLUE << "--- STARTING TESTS ---" << RESET << std::endl;
 
-    // Создаем бюрократов разных уровней
-    Bureaucrat boss("Big Boss", 1);        // Может всё
-    Bureaucrat mid("Manager", 40);         // Может роботомию и кусты
-    Bureaucrat junior("Intern", 140);      // Может подписать кусты, но не выполнить (140 > 137)
-    Bureaucrat newbie("Newbie", 150);      // Ничего не может
+    Bureaucrat boss("Big Boss", 1);
+    Bureaucrat mid("Manager", 40);
+    Bureaucrat junior("Intern", 140);
+    Bureaucrat newbie("Newbie", 150);
 
     std::cout << "\n" << BLUE << "--- TEST 1: ShrubberyCreationForm (Home) ---" << RESET << std::endl;
     try {
@@ -110,9 +107,6 @@ int main() {
     catch (std::exception &e) {
         std::cout << RED << "Critical Exception: " << e.what() << RESET << std::endl;
     }
-
-    // Очистка памяти не нужна, так как объекты на стеке, 
-    // но если использовал new, не забудь delete.
 
     std::cout << "\n" << BLUE << "--- END OF TESTS ---" << RESET << std::endl;
     

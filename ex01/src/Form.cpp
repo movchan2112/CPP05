@@ -10,7 +10,7 @@ Form::Form()
 
 // Конструктор с параметрами (Основной)
 // ВАЖНО: Мы должны проверить ранги сразу при создании формы
-Form::Form(const std::string& name, int gradeToSign, int gradeToExecute) 
+Form::Form(const std::string& name,const int gradeToSign, const int gradeToExecute) 
     : _name(name), _signed(false), _reqGradeToSighn(gradeToSign), _reqGradeToExecute(gradeToExecute) {
     
     if (gradeToSign < 1 || gradeToExecute < 1)
@@ -67,7 +67,7 @@ int Form::getGradeToExecute() const {
 ** Принимает Бюрократа. Проверяет, достаточно ли у него высокий ранг (число меньше или равно).
 ** Если ранг Бюрократа БОЛЬШЕ (хуже), чем требуемый -> кидаем ошибку.
 */
-void Form::BeSigned(Bureaucrat &B) {
+void Form::beSigned(Bureaucrat &B) {
     if (B.getGrade() > _reqGradeToSighn) {
         throw Form::GradeTooLowException();
     }

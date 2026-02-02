@@ -31,7 +31,6 @@ AForm& AForm::operator=(const AForm& other) {
     return *this;
 }
 
-// --- Геттеры ---
 
 const std::string AForm::getName() const {
     return _name;

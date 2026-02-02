@@ -17,7 +17,7 @@ int main() {
         std::cout << contract << std::endl;
 
         // Попытка подписать
-        contract.BeSigned(boss);
+        contract.beSigned(boss);
         
         std::cout << "After signing:" << std::endl;
         std::cout << contract << std::endl; // Должно быть Signed: Yes
@@ -43,7 +43,7 @@ int main() {
         std::cout << "Intern tries to sign Constitution..." << std::endl;
         
         // Это должно вызвать исключение Form::GradeTooLowException
-        constitution.BeSigned(intern);
+        constitution.beSigned(intern);
 
         std::cout << "ERROR: This line should not print!" << std::endl;
     }

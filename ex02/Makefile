@@ -46,6 +46,7 @@ clean:
 # Clean everything including executable
 fclean: clean
 	rm -f $(TARGET)
+	rm -f 
 
 # Rebuild everything
 re: fclean all

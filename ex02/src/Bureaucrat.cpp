@@ -79,15 +79,10 @@ void Bureaucrat::signForm(AForm &f){
 
 void Bureaucrat::executeForm(AForm const & form) const {
     try {
-        // Пытаемся выполнить форму
-        // Если ранг мал или форма не подписана, form.execute выбросит исключение
         form.execute(*this);
-        
-        // Если исключение не вылетело -> успех
         std::cout << _name << " executed " << form.getName() << std::endl;
     }
     catch (std::exception &e) {
-        // Если поймали ошибку -> печатаем причину
         std::cout << _name << " executed " << form.getName() 
                   << " failed because " << e.what() << std::endl;
     }
